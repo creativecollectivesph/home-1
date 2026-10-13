@@ -1,0 +1,85 @@
+/* TJC V11.1 — Shared public-site contour motion and circular theme reveal.
+   Designed for low-distraction operational dashboards. Four role-specific ambient washes.
+   Uses the existing website's js/contour-background.js shader unchanged. */
+:root {
+  --jc-portal-hue: 39, 63, 235;
+  --jc-contour-opacity: .80;
+}
+body[data-workspace="talent"] { --jc-portal-hue: 13, 169, 156; }
+body[data-workspace="client"] { --jc-portal-hue: 245, 158, 11; }
+body[data-workspace="hr"] { --jc-portal-hue: 128, 94, 220; }
+body[data-workspace="management"] { --jc-portal-hue: 39, 63, 235; }
+:root[data-theme="dark"] { --jc-contour-opacity: .57; }
+/* The canvas always sits behind the workspaces and doesn't intercept events. */
+.jc-portal-contours {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 0;
+  opacity: var(--jc-contour-opacity);
+  background: var(--page);
+  pointer-events: none;
+}
+.jc-shell { position:relative; z-index:1; background:transparent; }
+.jc-shell .main-column { position:relative; isolation:isolate; background:transparent; }
+.jc-shell .main-content.jc-content { background:transparent; position:relative; z-index:1; }
+/* Gently animated role accent + static contour rings provide fallback without WebGL.
+   Content stays on opaque cards; only the negative space receives these patterns. */
+.jc-shell .main-column::before {
+  content:"";
+  position:absolute;
+  top:-25%; left:-28%;
+  width:150%; height:145%;
+  background:
+    radial-gradient(ellipse at 72% 27%,rgba(var(--jc-portal-hue),.19),transparent 38%),
+    radial-gradient(ellipse at 18% 77%,rgba(var(--jc-portal-hue),.11),transparent 49%),
+    repeating-radial-gradient(ellipse at 73% 40%, transparent 0 74px, rgba(var(--jc-portal-hue),.09) 75px 76px, transparent 77px 118px);
+  opacity:.32;
+  transform:translate3d(0,0,0) scale(1);
+  animation:jc-ambient-drift 32s ease-in-out infinite alternate;
+  pointer-events:none;
+  z-index:0;
+  will-change:transform;
+}
+:root[data-theme=dark] .jc-shell .main-column::before { opacity:.27; }
+:root.no-webgl .jc-shell .main-column::before { opacity:.52; }
+@keyframes jc-ambient-drift {
+  from { transform:translate3d(-1.4%, -.8%, 0) rotate(-2deg) scale(1); }
+  to { transform:translate3d(1.3%, 1.6%, 0) rotate(2deg) scale(1.05); }
+}
+/* Keep the solid header and cards easy to read in both themes. */
+.jc-shell .jc-topbar { background:var(--surface); }
+.jc-shell .jc-panel, .jc-shell .jc-metric, .jc-shell .jc-modal,
+.jc-shell .jc-message { background:var(--surface); }
+/* Brand-consistent sun/moon transition from the public website. */
+.jc-shell [data-action="toggle-theme"] {
+  transition:background-color .2s ease,border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1);
+}
+.jc-shell [data-action="toggle-theme"]:hover { transform:rotate(10deg) scale(1.04); }
+.jc-shell [data-action="toggle-theme"]:active { transform:scale(.94); }
+.jc-shell [data-action="toggle-theme"] svg { transition:transform .25s ease; }
+::view-transition-old(root) { animation:none; mix-blend-mode:normal; }
+::view-transition-new(root) {
+  animation: jc-theme-reveal 950ms cubic-bezier(.22,.61,.36,1) both;
+  mix-blend-mode:normal;
+}
+@keyframes jc-theme-reveal {
+  from { clip-path:circle(0 at var(--theme-x,94%) var(--theme-y,6%)); }
+  to { clip-path:circle(150vmax at var(--theme-x,94%) var(--theme-y,6%)); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .jc-shell .main-column::before { animation:none!important;will-change:auto; }
+  .jc-shell [data-action="toggle-theme"],.jc-shell [data-action="toggle-theme"] svg { transition:none!important; }
+  ::view-transition-new(root), ::view-transition-old(root) { animation-duration:0.01ms!important; }
+}
+@media(max-width:950px) {
+  .jc-shell .main-column::before { animation-duration:44s;opacity:.22; }
+}
+
+/* Unified sign-in uses the same sun/moon icons and theme reveal. */
+#tjc-login-theme{display:inline-grid;place-items:center;transition:transform .25s ease,border-color .2s ease,background-color .2s ease}
+#tjc-login-theme:hover{transform:rotate(10deg) scale(1.04)}
+#tjc-login-theme svg{width:19px;height:19px;display:block}
+@media(prefers-reduced-motion:reduce){#tjc-login-theme{transition:none!important}}
