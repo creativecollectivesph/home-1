@@ -1,0 +1,92 @@
+/* Job Collectives V8.1 — accessibility, readable contrast, motion fallback.
+   Keep AFTER css/tjc-careers-stories.css. No previous layout replaced. */
+:root{--tjc-readable-ink:#0a0f3c;--tjc-readable-muted:#394765}
+:root[data-theme="dark"]{--tjc-readable-ink:#F6F8FF;--tjc-readable-muted:#C4CDEC}
+
+/* Fix the exact hero-bottom contrast issue shown in the screenshot. */
+:root[data-theme="dark"] .hero-role-builder,
+:root[data-theme="dark"] .hero-bottom,
+:root[data-theme="dark"] .hero-bottom p,
+:root[data-theme="dark"] .hero-copy,
+:root[data-theme="dark"] .hero-copy h1,
+:root[data-theme="dark"] .brand,
+:root[data-theme="dark"] .site-nav,
+:root[data-theme="dark"] .login-link{color:#F6F8FF}
+:root[data-theme="dark"] .hero-lead{color:#F7F8FF}
+:root[data-theme="dark"] .hero-detail,
+:root[data-theme="dark"] .cta-context{color:#D6DEFB}
+:root[data-theme="dark"] .hero-bottom .orbit-line{background:rgba(219,227,255,.5)}
+:root[data-theme="dark"] .hero-role-builder .text-link{color:#F6F8FF}
+:root[data-theme="dark"] .hero-role-builder .text-link:hover{color:#F7C46B}
+:root[data-theme="dark"] .hero-role-builder .hero-kicker{color:#B9C7FF}
+/* Explorer itself is a NAVY panel at night, but the individual role cards
+   remain white. Give each surface its own readable text color. */
+:root[data-theme="dark"] .role-explorer,
+:root[data-theme="dark"] .role-explorer .explorer-heading,
+:root[data-theme="dark"] .role-explorer .explorer-heading h2,
+:root[data-theme="dark"] .role-explorer .explorer-heading > p {color:#F6F8FF}
+:root[data-theme="dark"] .role-explorer .role-choice,
+:root[data-theme="dark"] .role-explorer .role-choice strong,
+:root[data-theme="dark"] .role-explorer .role-choice small {color:#0A0F3C}
+:root[data-theme="dark"] .intro,
+:root[data-theme="dark"] .visibility,
+:root[data-theme="dark"] .talent,
+:root[data-theme="dark"] .pricing,
+:root[data-theme="dark"] .inquiry {color:#F6F8FF}
+:root[data-theme="dark"] .intro h2,
+:root[data-theme="dark"] .visibility h2,
+:root[data-theme="dark"] .talent h2,
+:root[data-theme="dark"] .pricing h2,
+:root[data-theme="dark"] .inquiry h2,
+:root[data-theme="dark"] .service-item h3,
+:root[data-theme="dark"] .price-card h3{color:#F6F8FF}
+:root[data-theme="dark"] .intro .service-item p,
+:root[data-theme="dark"] .intro-head p:last-child,
+:root[data-theme="dark"] .fit-note,
+:root[data-theme="dark"] .pricing-heading > p,
+:root[data-theme="dark"] .pricing-note,
+:root[data-theme="dark"] .visibility-copy p:not(.section-label),
+:root[data-theme="dark"] .talent-copy p:not(.section-label),
+:root[data-theme="dark"] .inquiry-copy p:not(.section-label){color:#D6DEFB}
+:root[data-theme="dark"] .intro .service-list{border-color:#52659A}
+:root[data-theme="dark"] .intro .service-item{border-color:#52659A}
+:root[data-theme="dark"] .sample-header,
+:root[data-theme="dark"] .sample-body,
+:root[data-theme="dark"] .price-card,
+:root[data-theme="dark"] .inquiry form {color:#F6F8FF}
+:root[data-theme="dark"] .workspace-sample .sample-body li{color:#EEF2FF}
+:root[data-theme="dark"] .workspace-sample .sample-body li span:last-child{color:#C4D0FF}
+:root[data-theme="dark"] .sample-tab.is-active{color:#0A0F3C}
+:root[data-theme="dark"] .sample-prompt{color:#0A0F3C!important}
+:root[data-theme="dark"] .role-explorer .selected-role, :root[data-theme="dark"] .role-explorer .selected-role p{color:#0A0F3C}
+:root[data-theme="dark"] .price-card .button-secondary{color:#E6EBFF}
+:root[data-theme="dark"] .menu-bars,
+:root[data-theme="dark"] .menu-bars::before,
+:root[data-theme="dark"] .menu-bars::after{background:#F6F8FF}
+
+/* Motion that still works if WebGL2 is disabled, loses context, or is unavailable.
+   Canvas opacity is restored after the GPU has produced its first frame. */
+.contour-background { background-color:#F1F5F9; }
+:root:not([data-contour-ready="true"]) .contour-background {
+  background-image:
+    repeating-radial-gradient(ellipse at 69% 26%,transparent 0 27px,rgba(45,65,179,.095) 28px 29px,transparent 30px 48px),
+    repeating-radial-gradient(ellipse at 13% 80%,transparent 0 44px,rgba(33,55,177,.06) 45px 46px,transparent 47px 70px),
+    linear-gradient(145deg,#f1f5ff,#e8eeff);
+  background-size:145% 145%,165% 165%,100% 100%;
+  background-position:20% 30%,80% 65%,center;
+  animation:tjc-contour-fallback 16s ease-in-out infinite alternate;
+}
+:root[data-theme="dark"]:not([data-contour-ready="true"]) .contour-background{
+  background-image:
+    repeating-radial-gradient(ellipse at 69% 26%,transparent 0 27px,rgba(132,148,255,.15) 28px 29px,transparent 30px 48px),
+    repeating-radial-gradient(ellipse at 13% 80%,transparent 0 44px,rgba(147,176,255,.09) 45px 46px,transparent 47px 70px),
+    linear-gradient(145deg,#070C2A,#141F53);
+}
+@keyframes tjc-contour-fallback{
+  from{background-position:20% 30%,80% 65%,center}
+  to{background-position:60% 12%,25% 83%,center}
+}
+@media(prefers-reduced-motion:reduce){
+  :root:not([data-contour-ready="true"]) .contour-background {animation:none}
+}
+@media(max-width:600px){.hero-bottom p{white-space:normal;line-height:1.6}}
